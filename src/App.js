@@ -8,6 +8,7 @@ import './App.css';
 
 function App() {
   const {tg} = useTelegram()
+  
   useEffect(() => {
     tg.ready()
   }, [])

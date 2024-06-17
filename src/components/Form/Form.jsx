@@ -1,13 +1,28 @@
-import { useEffect } from 'react'
-import { useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useTelegram } from '../../hooks/useTelegram'
 import './Form.css'
 
 const Form = () => {
-   const {country, setCountry} = useState('')
-   const {street, setStreet} = useState('')
-   const {subject, setSubject} = useState('physical')
+   const [country, setCountry] = useState('')
+   const [street, setStreet] = useState('')
+   const [subject, setSubject] = useState('physical')
    const {tg} = useTelegram()
+
+   const onSendData = useCallback(() => {
+      const data = {
+         country, 
+         street, 
+         subject
+      }
+      tg.sendData(JSON.stringify(data))
+   }, [country, street, subject])
+
+   useEffect(() => {
+      tg.onEvent('mainButtonClicked', onSendData)
+      return () => {
+         tg.offEvent('mainButtonClicked', onSendData)
+      }
+   }, [])
 
    useEffect(() => {
       tg.MainButton.setParams({
@@ -23,9 +38,9 @@ const Form = () => {
         }
     }, [country, street])
 
-   const onChangeCountry = (e) => {
+    const onChangeCountry = (e) => {
       setCountry(e.target.value)
-   }
+  }
    const onChangeStreet = (e) => {
       setStreet(e.target.value)
    }
@@ -33,6 +48,7 @@ const Form = () => {
       setSubject(e.target.value)
    }
 
+   console.log(country);
   return (
     <div className='form'>
       <h3>Введите ваши данные</h3>
