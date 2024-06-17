@@ -14,7 +14,6 @@ const Form = () => {
          street, 
          subject
       }
-      console.log(data);
       tg.sendData(JSON.stringify(data))
    }, [country, street, subject])
 
